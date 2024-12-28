@@ -46,13 +46,13 @@ def main():
     parser.add_argument(
         "--width",
         type=int,
-        default=None,
+        default=512,  # Default width set to 512
         help="Width of the generated flags. Overrides size in bitmap mode.",
     )
     parser.add_argument(
         "--height",
         type=int,
-        default=None,
+        default=512,  # Default height set to 512
         help="Height of the generated flags. Overrides size in bitmap mode.",
     )
 
@@ -67,7 +67,7 @@ def main():
         # Ensure output directory exists
         os.makedirs(args.output, exist_ok=True)
 
-        # Generate the flags with the additional overlay, width, and height arguments
+        # Generate the flags with the updated arguments
         generate_flags(
             flags,
             args.format,

@@ -1,14 +1,24 @@
 from PIL import Image, ImageDraw
 import os
 
-# Define color schemes for various pride flags
 PRIDE_FLAGS = {
-    "trans": ["#55CDFC", "#F7A8B8", "#FFFFFF", "#F7A8B8", "#55CDFC"],
-    "gay": ["#FF0018", "#FFA52C", "#FFFF41", "#008018", "#0000F9", "#86007D"],
-    "bi": ["#D60270", "#D60270", "#9B4F96", "#0038A8", "#0038A8"],
-    "nonbinary": ["#FFF430", "#FFFFFF", "#9C59D1", "#000000"],
+    "trans": ["#5bcffa", "#f5a9b8", "#FFFFFF", "#f5a9b8", "#5bcffa"],
+    "gay": ["#e50203", "#ff8b01", "#feed00", "#008026", "#004dfe", "#750685"],
+    "bi": ["#d70071", "#d70071", "#9c4e97", "#0035aa", "#0035aa"],
+    "nonbinary": ["#fff430", "#FFFFFF", "#9c59d1", "#292929"],
+    "pan": ["#ff1b8d", "#ffd900", "#1bb3ff"],
+    "asexual": ["#000000", "#a4a4a5", "#ffffff", "#810081"],
+    "genderfluid": ["#ff75a2", "#ffffff", "#be18d6", "#000000", "#333ebd"],
+    "lesbian": ["#d62900", "#ff9b55", "#ffffff", "#d462a6", "#a40062"],
+    "aromantic": ["#3da542", "#a7d379", "#ffffff", "#a9a9a9", "#000000"],
+    "demiboy": ["#7f7f7f", "#c3c3c3", "#99d9ea", "#FFFFFF", "#99d9ea", "#c3c3c3", "#7f7f7f"],
+    "demigirl": ["#7f7f7f", "#c3c3c3", "#ffaec9", "#FFFFFF", "#ffaec9", "#c3c3c3", "#7f7f7f"],
+    "transfemme": ["#74deff", "#ffe1ed", "#ffb5d6", "#fe8cbf", "#ffb5d6", "#ffe1ed", "#74deff"],
+    "transmasc": ["#ff8bbf", "#cdf5ff", "#9aedff", "#76e0ff", "#9aedff", "#cdf5ff", "#ff8bbf"],
+    "mlm": ["#018e71", "#21cfac", "#99e9c2", "#ffffff", "#7cafe3", "#4f47cd", "#3a1379"],
     # Add more flags here as needed
 }
+
 
 def generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_path=None):
     """Generate bitmap pride flags with custom width and height, with optional overlay."""
@@ -26,8 +36,27 @@ def generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_p
     # Overlay PNG if provided
     if overlay_path:
         overlay = Image.open(overlay_path).convert("RGBA")
-        overlay = overlay.resize((width, height), Image.Resampling.LANCZOS)
-        img.paste(overlay, (0, 0), overlay)
+
+        # Resize the overlay to fit within the flag while maintaining its aspect ratio
+        overlay_width, overlay_height = overlay.size
+        aspect_ratio = overlay_width / overlay_height
+
+        # Calculate the new size of the overlay while maintaining its aspect ratio
+        if overlay_width > overlay_height:
+            new_width = int(width * 0.5)  # Use 50% of the flag's width
+            new_height = int(new_width / aspect_ratio)
+        else:
+            new_height = int(height * 0.5)  # Use 50% of the flag's height
+            new_width = int(new_height * aspect_ratio)
+
+        overlay = overlay.resize((new_width, new_height), Image.LANCZOS)
+
+        # Calculate position to center the overlay
+        x_offset = (width - new_width) // 2
+        y_offset = (height - new_height) // 2
+
+        # Paste the overlay onto the flag at the center position
+        img.paste(overlay, (x_offset, y_offset), overlay)
 
     # Save image
     output_path = os.path.join(output_dir, f"{flag_name}_{width}x{height}.png")
@@ -82,7 +111,7 @@ def generate_flags(flags, output_format, sizes, output_dir, overlay_path=None, w
         for size in sizes:
             if size.isdigit():
                 width = int(size)
-                height = width // 2  # Default 2:1 aspect ratio
+                height = width
             else:
                 try:
                     width, height = map(int, size.split('x'))

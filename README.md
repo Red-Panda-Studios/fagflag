@@ -8,8 +8,8 @@ A Python package to generate pride flags in bitmap (PNG) or vector (SVG) formats
 - **Generate Vector Flags (SVG)**: Generate pride flags in SVG format with a fixed aspect ratio.
 - **Color Schemes**: Includes several popular pride flag color schemes (e.g., Transgender, Gay, Bi, Nonbinary).
 - **Output Flexibility**: Supports generating flags in either "bitmap" (PNG) or "vector" (SVG) formats.
-- **Customizable Sizes**: Bitmap flags can be generated in different sizes with user-defined width and height.
-- **Overlay PNG**: Option to overlay a PNG image (resized to fit the flag) on the generated bitmap flags.
+- **Customizable Sizes**: Bitmap flags can be generated in different sizes with user-defined width and height. By default, flags are generated with a 1:1 aspect ratio (e.g., 512x512).
+- **Overlay PNG**: Option to overlay a PNG image on the generated bitmap flags. The image will be resized to fit the flag and centered without stretching.
 
 ## Installation
 
@@ -63,7 +63,7 @@ You can easily extend the `PRIDE_FLAGS` dictionary with more flags.
 
 ### Bitmap Flags
 
-Bitmap flags are generated in PNG format. The `sizes` argument is a list of integers (e.g., `["100", "200", "300"]`) that specify the sizes of the generated images. The images will be saved in the output directory with filenames like `flag_name_widthxheight.png`. You can also pass an optional PNG image to overlay on the flag (the image will be resized to match the flag's size).
+Bitmap flags are generated in PNG format. The `sizes` argument is a list of integers (e.g., `["100", "200", "300"]`) that specify the sizes of the generated images. The images will be saved in the output directory with filenames like `flag_name_widthxheight.png`. You can also pass an optional PNG image to overlay on the flag (the image will be resized to fit the flag's size and centered).
 
 ### Vector Flags
 
@@ -71,7 +71,7 @@ Vector flags are generated in SVG format with a fixed height of 100 units and a 
 
 ### Overlaying PNG
 
-You can optionally provide a PNG image to overlay on the bitmap flags. The image will be resized to fit the width and height of the generated flag. For example:
+You can optionally provide a PNG image to overlay on the bitmap flags. The image will be resized to fit the width and height of the generated flag and will be centered without stretching. For example:
 
 ```python
 overlay_path = "./overlay_image.png"  # Optional PNG overlay image path
