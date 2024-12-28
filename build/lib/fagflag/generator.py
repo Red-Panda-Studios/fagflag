@@ -43,10 +43,10 @@ def generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_p
 
         # Calculate the new size of the overlay while maintaining its aspect ratio
         if overlay_width > overlay_height:
-            new_width = int(width * 0.5)  # Use 50% of the flag's width
+            new_width = int(width * 0.8)  # Use 80% of the flag's width
             new_height = int(new_width / aspect_ratio)
         else:
-            new_height = int(height * 0.5)  # Use 50% of the flag's height
+            new_height = int(height * 0.8)  # Use 80% of the flag's height
             new_width = int(new_height * aspect_ratio)
 
         overlay = overlay.resize((new_width, new_height), Image.LANCZOS)
@@ -68,7 +68,7 @@ def generate_vector_flag(flag_name, colors, output_dir):
     """Generate a vector pride flag as an SVG."""
     height = 100  # Fixed height for simplicity
     stripe_height = height / len(colors)
-    width = height * 2  # Fixed aspect ratio 2:1
+    width = height
 
     svg_lines = [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
@@ -89,13 +89,12 @@ def generate_vector_flag(flag_name, colors, output_dir):
     print(f"Saved vector flag: {output_path}")
 
 
-def generate_flags(flags, output_format, sizes, output_dir, overlay_path=None, width=None, height=None):
+def generate_flags(flags, output_format, output_dir, overlay_path=None, width=None, height=None):
     """
     Generate pride flags based on input arguments.
     Args:
         flags (list): List of pride flags to generate (e.g., ["trans", "gay"]).
         output_format (str): Output format, either "bitmap" or "vector".
-        sizes (list): List of sizes for bitmap or "svg" for vector.
         output_dir (str): Directory to save the generated files.
         overlay_path (str, optional): Path to a PNG image to overlay on the flags.
         width (int, optional): Width for bitmap flags.
@@ -108,21 +107,14 @@ def generate_flags(flags, output_format, sizes, output_dir, overlay_path=None, w
 
         colors = PRIDE_FLAGS[flag_name]
 
-        for size in sizes:
-            if size.isdigit():
-                width = int(size)
-                height = width
-            else:
-                try:
-                    width, height = map(int, size.split('x'))
-                except ValueError:
-                    print(f"Invalid size format: {size}. Skipping...")
-                    continue
+        if width is None or height is None:
+            print(f"Width and height must be specified for {flag_name}. Skipping...")
+            continue
 
-            if output_format == "bitmap":
-                generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_path)
-            elif output_format == "vector" and "svg" in sizes:
-                generate_vector_flag(flag_name, colors, output_dir)
+        if output_format == "bitmap":
+            generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_path)
+        elif output_format == "vector":
+            generate_vector_flag(flag_name, colors, output_dir)
 
 
 if __name__ == "__main__":

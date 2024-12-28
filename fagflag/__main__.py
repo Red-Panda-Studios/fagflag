@@ -27,12 +27,6 @@ def main():
         help="Output format (bitmap or vector).",
     )
     parser.add_argument(
-        "--sizes",
-        type=str,
-        required=True,
-        help="Comma-separated list of sizes (e.g., 128,256,512 for bitmap or svg for vector).",
-    )
-    parser.add_argument(
         "--output",
         type=str,
         required=True,
@@ -61,7 +55,6 @@ def main():
     if args.create:
         # Parse arguments
         flags = args.flags.split(",")
-        sizes = args.sizes.split(",")
         overlay_path = args.overlay
 
         # Ensure output directory exists
@@ -71,7 +64,6 @@ def main():
         generate_flags(
             flags,
             args.format,
-            sizes,
             args.output,
             overlay_path=overlay_path,
             width=args.width,
