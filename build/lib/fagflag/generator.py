@@ -1,5 +1,3 @@
-# generator.py
-
 from PIL import Image, ImageDraw
 import os
 
@@ -12,25 +10,29 @@ PRIDE_FLAGS = {
     # Add more flags here as needed
 }
 
-def generate_bitmap_flag(flag_name, colors, sizes, output_dir):
-    """Generate bitmap pride flags at specified sizes."""
-    for size in sizes:
-        width, height = int(size), int(size) // 2
-        img = Image.new("RGB", (width, height), "white")
-        draw = ImageDraw.Draw(img)
+def generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_path=None):
+    """Generate bitmap pride flags with custom width and height, with optional overlay."""
+    img = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(img)
 
-        # Draw stripes
-        stripe_height = height // len(colors)
-        for i, color in enumerate(colors):
-            draw.rectangle(
-                [(0, i * stripe_height), (width, (i + 1) * stripe_height)],
-                fill=color,
-            )
+    # Draw stripes
+    stripe_height = height // len(colors)
+    for i, color in enumerate(colors):
+        draw.rectangle(
+            [(0, i * stripe_height), (width, (i + 1) * stripe_height)],
+            fill=color,
+        )
 
-        # Save image
-        output_path = os.path.join(output_dir, f"{flag_name}_{size}.png")
-        img.save(output_path)
-        print(f"Saved bitmap flag: {output_path}")
+    # Overlay PNG if provided
+    if overlay_path:
+        overlay = Image.open(overlay_path).convert("RGBA")
+        overlay = overlay.resize((width, height), Image.ANTIALIAS)
+        img.paste(overlay, (0, 0), overlay)
+
+    # Save image
+    output_path = os.path.join(output_dir, f"{flag_name}_{width}x{height}.png")
+    img.save(output_path)
+    print(f"Saved bitmap flag: {output_path}")
 
 
 def generate_vector_flag(flag_name, colors, output_dir):
@@ -58,7 +60,7 @@ def generate_vector_flag(flag_name, colors, output_dir):
     print(f"Saved vector flag: {output_path}")
 
 
-def generate_flags(flags, output_format, sizes, output_dir):
+def generate_flags(flags, output_format, sizes, output_dir, overlay_path=None):
     """
     Generate pride flags based on input arguments.
     Args:
@@ -66,6 +68,7 @@ def generate_flags(flags, output_format, sizes, output_dir):
         output_format (str): Output format, either "bitmap" or "vector".
         sizes (list): List of sizes for bitmap or "svg" for vector.
         output_dir (str): Directory to save the generated files.
+        overlay_path (str, optional): Path to a PNG image to overlay on the flags.
     """
     for flag_name in flags:
         if flag_name not in PRIDE_FLAGS:
@@ -74,12 +77,21 @@ def generate_flags(flags, output_format, sizes, output_dir):
 
         colors = PRIDE_FLAGS[flag_name]
 
-        if output_format == "bitmap":
-            bitmap_sizes = [s for s in sizes if s.isdigit()]
-            generate_bitmap_flag(flag_name, colors, bitmap_sizes, output_dir)
+        for size in sizes:
+            if size.isdigit():
+                width = int(size)
+                height = width // 2  # Default 2:1 aspect ratio
+            else:
+                try:
+                    width, height = map(int, size.split('x'))
+                except ValueError:
+                    print(f"Invalid size format: {size}. Skipping...")
+                    continue
 
-        elif output_format == "vector" and "svg" in sizes:
-            generate_vector_flag(flag_name, colors, output_dir)
+            if output_format == "bitmap":
+                generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_path)
+            elif output_format == "vector" and "svg" in sizes:
+                generate_vector_flag(flag_name, colors, output_dir)
 
 
 if __name__ == "__main__":
