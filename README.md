@@ -23,7 +23,7 @@ pip install pride-flag-generator
 Alternatively, you can clone the repository and install it locally:
 
 ```bash
-git clone https://github.com/your-username/pride-flag-generator.git
+git clone https://github.com/Red-Panda-Studios/fagflag
 cd pride-flag-generator
 pip install .
 ```
