@@ -62,6 +62,7 @@ def main():
         # Parse arguments
         flags = args.flags.split(",")
         sizes = args.sizes.split(",")
+        overlay_path = args.overlay
 
         # Ensure output directory exists
         os.makedirs(args.output, exist_ok=True)
@@ -72,7 +73,7 @@ def main():
             args.format,
             sizes,
             args.output,
-            overlay_path=args.overlay,
+            overlay_path=overlay_path,
             width=args.width,
             height=args.height
         )

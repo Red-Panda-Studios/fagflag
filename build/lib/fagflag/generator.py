@@ -26,7 +26,7 @@ def generate_bitmap_flag(flag_name, colors, width, height, output_dir, overlay_p
     # Overlay PNG if provided
     if overlay_path:
         overlay = Image.open(overlay_path).convert("RGBA")
-        overlay = overlay.resize((width, height), Image.ANTIALIAS)
+        overlay = overlay.resize((width, height), Image.Resampling.LANCZOS)
         img.paste(overlay, (0, 0), overlay)
 
     # Save image
@@ -60,7 +60,7 @@ def generate_vector_flag(flag_name, colors, output_dir):
     print(f"Saved vector flag: {output_path}")
 
 
-def generate_flags(flags, output_format, sizes, output_dir, overlay_path=None):
+def generate_flags(flags, output_format, sizes, output_dir, overlay_path=None, width=None, height=None):
     """
     Generate pride flags based on input arguments.
     Args:
@@ -69,6 +69,8 @@ def generate_flags(flags, output_format, sizes, output_dir, overlay_path=None):
         sizes (list): List of sizes for bitmap or "svg" for vector.
         output_dir (str): Directory to save the generated files.
         overlay_path (str, optional): Path to a PNG image to overlay on the flags.
+        width (int, optional): Width for bitmap flags.
+        height (int, optional): Height for bitmap flags.
     """
     for flag_name in flags:
         if flag_name not in PRIDE_FLAGS:
