@@ -16,14 +16,14 @@ A Python package to generate pride flags in bitmap (PNG) or vector (SVG) formats
 To install the package, use pip:
 
 ```bash
-pip install pride-flag-generator
+pip install fagflag
 ```
 
 Alternatively, you can clone the repository and install it locally:
 
 ```bash
 git clone https://github.com/Red-Panda-Studios/fagflag
-cd pride-flag-generator
+cd fagflag
 pip install .
 ```
 
@@ -32,7 +32,7 @@ pip install .
 ### Importing the Package
 
 ```python
-from pride_flag_generator import generate_flags
+from fagflag import generate_flags
 ```
 
 ### Generating Flags
@@ -40,7 +40,7 @@ from pride_flag_generator import generate_flags
 You can generate flags by specifying the flag names, output format, sizes, output directory, and optionally, a PNG overlay image.
 
 ```python
-from pride_flag_generator import generate_flags
+from fagflag import generate_flags
 
 # Example usage: Generate pride flags
 flags = ["trans", "gay", "bi"]

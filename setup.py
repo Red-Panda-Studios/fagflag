@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="fagflag",
-    version="1.0.1",
+    version="1.0.2",
     description="Generate pride flags as bitmap or vector images",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
